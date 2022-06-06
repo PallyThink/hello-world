@@ -1,0 +1,146 @@
+# 20280091 # Do Tuan Thinh
+summary(airquality)
+df=airquality
+#a 
+hist(airquality$Temp)
+curve(dnorm(x),col="blue",lty=1,lwd=2,add=TRUE)
+#b
+boxplot()
+
+install.packages('faraway')
+df2=coagulation
+library(faraway)
+df2=coagulation
+df2
+is.factor(df2$diet) # Ket qua = False tuc la bien group khong phai la kieu nhan to (factor)
+
+#Graphical and check the assumptions: 
+boxplot(df2$coag ~ df2$diet, col = c(2,3,4,5), data = df2)
+
+#Kiem tra phan phoi chuan
+qqnorm(df2$coag, col = 'red', pch = 16)
+qqline(df2$coag)
+
+plotmeans(y ~ group, data = dat)
+plotmeans(df2$coag ~ df2$diet, data = df2)
+#Run ANOVA
+fit1 <- aov(df2$coag ~ df2$diet, data = df2)
+fit1
+summary(fit1)
+qf(0.95, df1 = 3, df2 = 20)
+# F_value = 9.241 > 3.098 -> bac bo H0
+
+pairwise.t.test(df2$coag, df2$diet, 'none')
+TukeyHSD(fit1)
+
+p.table = function(x, g, p.adjust.method = "none", ..., level = 0.05) {
+  ## fill out p-value table
+  p = pairwise.t.test(x, g, p.adjust.method, ...)$p.value
+  p[is.na(p)] = 0
+  p = rbind(0, cbind(p, 0))
+  p = p + t(p)
+  ## 0 = no difference, 1 = difference
+  p = 1 * (p <= level)
+  diag(p) = 0
+  ## get means and find their order
+  m = tapply(x, g, mean)
+  o = order(m)
+  p = p[o, o]
+  dimnames(p) = list(names(m[o]), names(m[o]))
+  cbind(mean = m[o], p)
+}
+
+p.table(df2$coag,df2$diet,"none",0.05)
+
+
+## MSSV: 20280037
+## Ho va ten: Nguyen Van Huan
+
+# Cau 1
+dat<- airquality
+dat
+
+# Histogram 
+hist(dat$Temp)
+#==> Do thi hist co dang dieu cua phan phoi chuan
+
+# So sanh toc do gio trong thang 5 va 6
+layout(1:2)
+Wind5<-dat$Wind[1:31]
+boxplot(Wind5)
+Wind6<-dat$Wind[32:61]
+boxplot(Wind6)
+
+# Tim toc do gio lon nhat trong thang 
+Wind9<-dat$Wind[124:153]
+max(Wind9)
+#==> Toc do gio lon nhat trong thang 9 =16.6
+
+
+
+# Tim uoc luong hop ly nhat
+
+
+
+
+# Cau 2
+
+# Gia dinh moi tua 100 nguoi ==> Co mau: 10*100=1000 nguoi
+
+#tao bo data
+data <- data.frame (tour = rep (1:10, each = 100),val = rnorm (1000, mean = 6.5, sd = 1.5))
+data
+
+#random4 nhom tham quan tron 10 nhom
+nhom <- sample(unique(data$tour), size=4, replace=F)
+nhom
+
+#lay tat ca thanh vien thuoc 'nhom'
+data_nhom <- data[data$tour %in% nhom, ]
+data_nhom
+#bang tan suat
+table(data_nhom$tour)
+
+#>> mau data_nhom la mau lay theo phuong phap phan cum
+
+
+
+
+library('faraway')
+df2=coagulation
+df2
+
+is.factor(df2$diet) # Ket qua = TRUE tuc la bien diet la kieu nhan to (factor)
+
+#Graphical and check the assumptions: 
+boxplot(df2$coag ~ df2$diet, col = c(2,3,4,5), data = df2)
+
+#Kiem tra phan phoi chuan
+qqnorm(df2$coag, col = 'red', pch = 16)
+qqline(df2$coag)
+
+
+#Tinh trung binh theo nhom
+#install.packages("dplyr")            # Install dplyr package
+library("dplyr")                      # Load dplyr package
+
+df2%>%                               # Specify data frame
+  group_by(diet) %>%                 # Specify group indicator
+  summarise_at(vars(coag),               # Specify column
+               list(ybar = mean))
+
+#install.packages(gplots) # Install gplots package
+library(gplots)          # Load gplots package
+
+plotmeans(coag ~ diet, col = c(2,3,4,5), data = df2)
+
+#Run ANOVA
+fit1 <- aov(df2$coag ~ df2$diet, data = df2)
+fit1
+summary(fit1)
+#Ket luan: p-value=4.66e-05 rat be nen ta du bang chung bac bo H0.
+
+
+#So sanh boi sau phan tich phuong sai
+pairwise.t.test(df2$coag, df2$diet, 'none')
+TukeyHSD(fit1)
